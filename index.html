@@ -61,7 +61,7 @@ body.shaking {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: #fff;
   border-bottom: 3px solid var(--brand-green);
-  padding: 8px 20px;
+  padding: 12px 20px 10px;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -74,7 +74,7 @@ body.shaking {
 .logo-wrap svg { height: 36px; width: auto; }
 .tagline {
   font-style: italic; font-size: 11px; color: #666;
-  letter-spacing: 2px; margin-top: 2px;
+  letter-spacing: 2px; margin-top: 4px; margin-bottom: 2px;
   text-transform: uppercase;
 }
 .layer-indicator {
@@ -83,6 +83,7 @@ body.shaking {
   text-transform: uppercase; letter-spacing: 1px;
   color: var(--brand-green);
   white-space: nowrap;
+  margin-top: 2px;
 }
 
 /* Main stage */
@@ -393,13 +394,13 @@ body.shaking {
 /* Mobile */
 @media (max-width: 767px) {
   .stage {
-    padding-top: 60px;
+    padding-top: 56px;
     padding-bottom: 0;
-    align-items: flex-start;
-    padding-top: 70px;
+    align-items: center;
+    justify-content: center;
   }
   .onion-container {
-    width: 65vw; height: calc(65vw * 1.1);
+    width: 60vw; height: calc(60vw * 1.1);
     flex-shrink: 0;
   }
   .cards-sidebar {
@@ -423,7 +424,11 @@ body.shaking {
   .layer-indicator { font-size: 11px; }
   .logo-wrap svg { height: 24px; }
   .tagline { font-size: 9px; letter-spacing: 1px; }
-  .core-message { width: 85vw; }
+  .core-message {
+    width: 85vw;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
   .core-message p { font-size: 14px; max-width: 240px; }
   .regrow-btn { font-size: 12px; padding: 8px 18px; }
   .help-btn { top: 68px; right: 10px; width: 28px; height: 28px; font-size: 14px; }
