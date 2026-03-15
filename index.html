@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 <title>The Onion | Peel The News</title>
 <style>
 :root {
@@ -107,12 +108,12 @@ body.shaking {
 /* SVG Onion */
 .onion-svg {
   width: 100%; height: 100%;
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.18));
 }
 
 .onion-layer {
   cursor: url('knife.cur'), crosshair;
   transform-origin: center center;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
 .onion-layer:hover path:first-child {
   fill-opacity: 0.85;
@@ -391,24 +392,44 @@ body.shaking {
 
 /* Mobile */
 @media (max-width: 767px) {
+  .stage {
+    padding-top: 60px;
+    padding-bottom: 0;
+    align-items: flex-start;
+    padding-top: 70px;
+  }
   .onion-container {
-    width: 75vw; height: calc(75vw * 1.24);
+    width: 65vw; height: calc(65vw * 1.1);
+    flex-shrink: 0;
   }
   .cards-sidebar {
     top: auto; bottom: 0; left: 0; right: 0;
-    width: 100%; height: 240px;
+    width: 100%; max-height: 35vh;
     border-left: none; border-top: 1px solid #ddd;
     transform: translateY(100%);
     border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
   }
   .cards-sidebar.open { transform: translateY(0); }
-  .peel-pile { left: 10px; bottom: 10px; width: 120px; height: 80px; }
-  .peel-skin { width: 50px; height: 30px; }
-  .floating-cards { flex-direction: column; gap: 8px; }
-  .floating-card { width: 260px; }
+  .peel-pile { left: 10px; bottom: 10px; width: 100px; height: 60px; }
+  .peel-skin { width: 40px; height: 26px; }
+  .floating-cards {
+    flex-direction: column; gap: 6px;
+    top: 40%; transform: translate(-50%, -50%);
+  }
+  .floating-card { width: 240px; padding: 8px; }
   .header-inner { flex-direction: column; gap: 2px; }
+  .header { padding: 6px 12px; }
   .layer-indicator { font-size: 11px; }
-  .logo-wrap svg { height: 28px; }
+  .logo-wrap svg { height: 24px; }
+  .tagline { font-size: 9px; letter-spacing: 1px; }
+  .core-message { width: 85vw; }
+  .core-message p { font-size: 14px; max-width: 240px; }
+  .regrow-btn { font-size: 12px; padding: 8px 18px; }
+  .help-btn { top: 68px; right: 10px; width: 28px; height: 28px; font-size: 14px; }
+  .onboarding-icon { width: 100px; height: 100px; }
+  .onboarding-text { font-size: 16px; }
+  .onboarding-hint { font-size: 12px; }
 }
 
 @media (min-width: 768px) {
