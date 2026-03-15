@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Onion | Peel The News</title>
+<style>
+:root {
+  --brand-green: #006B3A;
+  --brand-black: #111;
+  --bg: #F5F0E8;
+  --card-bg: #fff;
+  --layer-1: #8B5E3C;
+  --layer-2: #C4873B;
+  --layer-3: #D4A843;
+  --layer-4: #E8CC6E;
+  --layer-5: #F2E6B8;
+  --layer-6: #FAF5E4;
+  --thumb-breaking: #C0392B;
+  --thumb-politics: #1B2A4A;
+  --thumb-local: #1E6B3A;
+  --thumb-world: #0E7C7B;
+  --thumb-lifestyle: #E07656;
+  --thumb-opinion: #4A2366;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--bg);
+  cursor: url('knife.cur'), crosshair;
+}
+
+body {
+  position: relative;
+  transition: transform 0.05s ease;
+}
+body.shaking {
+  animation: shake 0.2s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+}
+
+/* Background pattern */
+.bg-pattern {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; opacity: 0.03;
+}
+
+/* Header */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: #fff;
+  border-bottom: 3px solid var(--brand-green);
+  padding: 8px 20px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; max-width: 1200px;
+}
+.logo-wrap { display: flex; flex-direction: column; align-items: center; }
+.logo-wrap svg { height: 36px; width: auto; }
+.tagline {
+  font-style: italic; font-size: 11px; color: #666;
+  letter-spacing: 2px; margin-top: 2px;
+  text-transform: uppercase;
+}
+.layer-indicator {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--brand-green);
+  white-space: nowrap;
+}
+
+/* Main stage */
+.stage {
+  position: relative;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding-top: 70px;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+/* Onion container */
+.onion-container {
+  position: relative;
+  width: 420px; height: 460px;
+  cursor: url('knife.cur'), crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* SVG Onion */
+.onion-svg {
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.18));
+}
+
+.onion-layer {
+  cursor: url('knife.cur'), crosshair;
+  transform-origin: center center;
+}
+.onion-layer:hover path:first-child {
+  fill-opacity: 0.85;
+}
+.onion-layer.peeling {
+  pointer-events: none;
+}
+.onion-layer.peeled {
+  pointer-events: none;
+  opacity: 0;
+}
+/* Peel animations — skin lifts from one edge, curls back, then detaches */
+@keyframes peelRight {
+  0%   { transform-origin: 0% 60%; transform: perspective(600px) rotateY(0deg) scale(1); opacity: 1; }
+  25%  { transform-origin: 0% 60%; transform: perspective(600px) rotateY(-35deg) skewY(3deg) scale(1.02); opacity: 1; }
+  50%  { transform-origin: 0% 55%; transform: perspective(600px) rotateY(-70deg) skewY(5deg) translateX(30px) scale(0.95); opacity: 0.8; }
+  75%  { transform-origin: 0% 50%; transform: perspective(600px) rotateY(-100deg) skewY(4deg) translateX(80px) translateY(-40px) scale(0.7); opacity: 0.4; }
+  100% { transform-origin: 0% 50%; transform: perspective(600px) rotateY(-120deg) skewY(2deg) translateX(160px) translateY(-80px) scale(0.4); opacity: 0; }
+}
+@keyframes peelLeft {
+  0%   { transform-origin: 100% 60%; transform: perspective(600px) rotateY(0deg) scale(1); opacity: 1; }
+  25%  { transform-origin: 100% 60%; transform: perspective(600px) rotateY(35deg) skewY(-3deg) scale(1.02); opacity: 1; }
+  50%  { transform-origin: 100% 55%; transform: perspective(600px) rotateY(70deg) skewY(-5deg) translateX(-30px) scale(0.95); opacity: 0.8; }
+  75%  { transform-origin: 100% 50%; transform: perspective(600px) rotateY(100deg) skewY(-4deg) translateX(-80px) translateY(-40px) scale(0.7); opacity: 0.4; }
+  100% { transform-origin: 100% 50%; transform: perspective(600px) rotateY(120deg) skewY(-2deg) translateX(-160px) translateY(-80px) scale(0.4); opacity: 0; }
+}
+@keyframes peelUp {
+  0%   { transform-origin: 50% 100%; transform: perspective(600px) rotateX(0deg) scale(1); opacity: 1; }
+  25%  { transform-origin: 50% 100%; transform: perspective(600px) rotateX(30deg) skewX(2deg) scale(1.02); opacity: 1; }
+  50%  { transform-origin: 50% 100%; transform: perspective(600px) rotateX(65deg) skewX(3deg) translateY(-30px) scale(0.95); opacity: 0.8; }
+  75%  { transform-origin: 50% 90%;  transform: perspective(600px) rotateX(95deg) skewX(2deg) translateY(-80px) scale(0.7); opacity: 0.4; }
+  100% { transform-origin: 50% 90%;  transform: perspective(600px) rotateX(110deg) translateY(-150px) scale(0.4); opacity: 0; }
+}
+@keyframes peelDown {
+  0%   { transform-origin: 50% 0%; transform: perspective(600px) rotateX(0deg) scale(1); opacity: 1; }
+  25%  { transform-origin: 50% 0%; transform: perspective(600px) rotateX(-30deg) skewX(-2deg) scale(1.02); opacity: 1; }
+  50%  { transform-origin: 50% 0%; transform: perspective(600px) rotateX(-65deg) skewX(-3deg) translateY(30px) scale(0.95); opacity: 0.8; }
+  75%  { transform-origin: 50% 10%; transform: perspective(600px) rotateX(-95deg) skewX(-2deg) translateY(80px) scale(0.7); opacity: 0.4; }
+  100% { transform-origin: 50% 10%; transform: perspective(600px) rotateX(-110deg) translateY(150px) scale(0.4); opacity: 0; }
+}
+
+/* Skin fragment particles — torn shards that burst on peel */
+.skin-fragment {
+  position: fixed;
+  pointer-events: none;
+  z-index: 80;
+  border-radius: 30% 60% 40% 55% / 50% 40% 60% 45%;
+  animation: fragmentBurst var(--dur) cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+@keyframes fragmentBurst {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.85;
+  }
+  30% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(var(--fx), var(--fy)) rotate(var(--frot)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* Peel pile */
+.peel-pile {
+  position: fixed;
+  bottom: 20px; left: 20px;
+  width: 180px; height: 140px;
+  z-index: 10;
+  pointer-events: none;
+}
+.peel-skin {
+  position: absolute;
+  width: 70px; height: 45px;
+  opacity: 0.55;
+  pointer-events: none;
+  animation: skinDrop 0.8s ease forwards;
+  overflow: visible;
+}
+@keyframes skinDrop {
+  0% { transform: translate(-100px, -200px) rotate(0deg) scale(0.5); opacity: 0; }
+  60% { opacity: 0.6; }
+  100% { transform: translate(0, 0) rotate(var(--rot)) scale(var(--sc)); opacity: 0.45; }
+}
+
+/* Article cards container */
+.cards-sidebar {
+  position: fixed; right: 0; top: 70px; bottom: 0;
+  width: 340px; background: #fff;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.4s ease;
+  z-index: 50;
+  padding: 16px;
+}
+.cards-sidebar.open { transform: translateX(0); }
+.cards-sidebar h3 {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 13px; text-transform: uppercase;
+  letter-spacing: 2px; color: #999;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Article card */
+.article-card {
+  display: flex; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  animation: cardReveal 0.4s ease forwards;
+}
+.article-card:nth-child(2) { animation-delay: 0.1s; }
+.article-card:nth-child(3) { animation-delay: 0.2s; }
+.article-card:nth-child(4) { animation-delay: 0.3s; }
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-thumb {
+  flex-shrink: 0; width: 70px; height: 52px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.card-thumb svg { width: 100%; height: 100%; }
+
+.card-body { flex: 1; min-width: 0; }
+.card-category {
+  display: inline-block;
+  font-family: Arial, sans-serif;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: #fff; background: var(--brand-green);
+  padding: 2px 6px; border-radius: 2px;
+  margin-bottom: 4px;
+}
+.card-headline {
+  font-family: 'Arial Black', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px; font-weight: 900;
+  line-height: 1.25; color: var(--brand-black);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Core reveal */
+.core-message {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 20;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.core-message.visible {
+  opacity: 1; pointer-events: auto;
+}
+.core-message p {
+  font-style: italic; font-size: 16px;
+  color: #555; max-width: 280px;
+  line-height: 1.5; margin-bottom: 16px;
+}
+.core-message .teardrop {
+  display: inline-block;
+  animation: tearFall 2s ease-in-out infinite;
+}
+@keyframes tearFall {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(12px); opacity: 1; }
+}
+.regrow-btn {
+  display: inline-block;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 13px; font-weight: 900;
+  cursor: url('knife.cur'), crosshair;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: #fff; background: var(--brand-green);
+  border: none; padding: 10px 24px;
+  border-radius: 4px; cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+}
+.regrow-btn:hover { background: #008a4a; transform: scale(1.04); }
+
+/* Onion core pulse */
+.core-pulse {
+  animation: corePulse 2s ease-in-out infinite;
+}
+@keyframes corePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Onboarding overlay */
+.onboarding {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.onboarding.hidden {
+  opacity: 0; pointer-events: none;
+}
+.onboarding-icon { width: 140px; height: 140px; }
+.onboarding-text {
+  color: #fff; font-size: 20px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-weight: 700; text-align: center;
+}
+.onboarding-hint {
+  color: rgba(255,255,255,0.6); font-size: 14px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* Desktop onboarding icon */
+.desktop-instruction { display: block; }
+.mobile-instruction { display: none; }
+@media (pointer: coarse) {
+  .desktop-instruction { display: none; }
+  .mobile-instruction { display: block; }
+}
+
+/* Help button */
+.help-btn {
+  position: fixed; top: 78px; right: 16px;
+  width: 32px; height: 32px;
+  border-radius: 50%; border: 2px solid var(--brand-green);
+  background: #fff; color: var(--brand-green);
+  font-family: Georgia, serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; z-index: 150;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.help-btn:hover { background: var(--brand-green); color: #fff; }
+
+/* Cards floating reveal */
+.floating-cards {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; gap: 12px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.floating-cards.visible { opacity: 1; }
+.floating-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  transform: scale(0.8) translateY(20px);
+  animation: floatCardIn 0.4s ease forwards;
+}
+.floating-card:nth-child(2) { animation-delay: 0.1s; }
+.floating-card:nth-child(3) { animation-delay: 0.2s; }
+@keyframes floatCardIn {
+  to { transform: scale(1) translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .onion-container {
+    width: 75vw; height: calc(75vw * 1.24);
+  }
+  .cards-sidebar {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 240px;
+    border-left: none; border-top: 1px solid #ddd;
+    transform: translateY(100%);
+    border-radius: 16px 16px 0 0;
+  }
+  .cards-sidebar.open { transform: translateY(0); }
+  .peel-pile { left: 10px; bottom: 10px; width: 120px; height: 80px; }
+  .peel-skin { width: 50px; height: 30px; }
+  .floating-cards { flex-direction: column; gap: 8px; }
+  .floating-card { width: 260px; }
+  .header-inner { flex-direction: column; gap: 2px; }
+  .layer-indicator { font-size: 11px; }
+  .logo-wrap svg { height: 28px; }
+}
+
+@media (min-width: 768px) {
+  .cards-sidebar.open ~ .onion-container {
+    transform: translateX(-80px);
+  }
+}
+
+/* Blur during peel */
+.stage.blurring {
+  animation: blurPulse 0.4s ease;
+}
+@keyframes blurPulse {
+  0%, 100% { filter: blur(0); }
+  50% { filter: blur(1px); }
+}
+
+/* Trail canvas */
+#trailCanvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 90;
+}
+</style>
+</head>
+<body>
+
+<canvas id="trailCanvas"></canvas>
+
+<!-- Background pattern -->
+<svg class="bg-pattern" width="100%" height="100%">
+  <defs>
+    <pattern id="veinPattern" width="60" height="80" patternUnits="userSpaceOnUse">
+      <path d="M30 0 Q28 20 30 40 Q32 60 30 80" stroke="#8B5E3C" stroke-width="0.5" fill="none" opacity="0.4"/>
+      <path d="M10 0 Q12 25 10 50 Q8 70 10 80" stroke="#8B5E3C" stroke-width="0.3" fill="none" opacity="0.3"/>
+      <path d="M50 0 Q48 15 50 35 Q52 55 50 80" stroke="#8B5E3C" stroke-width="0.3" fill="none" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#veinPattern)"/>
+</svg>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 646 103" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M524.393 19.1345C544.374 19.1345 563.661 35.4877 563.661 58.4595C563.661 82.9249 546.74 100.411 524.393 100.411V100.437C502.02 100.437 485.099 82.9507 485.099 58.4595C485.099 35.5135 504.309 19.1345 524.393 19.1345ZM320.466 19.0572C340.447 19.0572 359.708 35.4362 359.708 58.408C359.708 82.8734 342.813 100.385 320.44 100.385V100.411C298.067 100.411 281.172 82.9249 281.172 58.4337C281.172 35.4619 300.356 19.0572 320.44 19.0572H320.466ZM237.763 46.7933C252.37 46.7933 262.605 56.4507 262.605 71.9541V78.3408H226.32C226.32 84.1095 232.852 87.0969 237.789 87.0969C242.83 87.0969 245.401 85.629 248.076 83.4142L258.928 91.0371C256.768 93.3034 250.159 100.205 237.198 100.205C219.274 100.205 209.399 88.5391 209.399 71.645C209.399 56.5795 221.202 46.7933 237.789 46.7933H237.763ZM571.402 18.0271L620.159 53.3088V21.8901L645.309 20.1904V99.7159L596.629 65.8506V97.7072H571.402V18.0271ZM367.474 18.0271L416.258 53.3088L416.232 53.2573V21.9158L441.356 20.2161V99.7417L392.702 65.8763V97.7329H367.5V18.0271H367.474ZM130.065 28.5086V49.6777L142.023 49.3944V64.1509L130.04 63.7646V75.7398C130.04 81.1479 131.634 83.1309 135.466 83.1309C137.446 83.1309 140.12 82.7189 141.329 81.8175L145.366 94.6941C143.489 95.9817 140.326 98.9691 129.422 98.9691L129.5 99.0463C114.456 99.0463 111.678 87.5604 111.678 76.1776V63.8676L103.578 64.1766V49.3944L111.678 49.6004V30.3886L130.065 28.4829V28.5086ZM170.182 18.7224V52.5105C170.568 52.2787 178 47.7204 189.469 47.7204C198.392 47.7204 202.841 55.7039 202.841 64.5887V97.9647H184.429V74.1688C184.429 66.6489 184.094 61.6013 177.794 61.6013C174.348 61.6013 170.182 64.1766 170.182 64.1766V97.9647H151.692V20.2161L170.208 18.7224H170.182ZM477.23 21.9158V97.7329H451.9V21.9158H477.23ZM524.419 45.1966C517.09 45.1966 510.455 51.3001 510.455 58.4852C510.455 67.37 517.09 73.6795 524.419 73.6795C531.619 73.6795 538.254 67.37 538.254 58.4852C538.254 51.2743 531.645 45.1966 524.419 45.1966ZM320.492 45.1709C313.137 45.1709 306.528 51.2486 306.528 58.4337C306.528 67.3185 313.137 73.628 320.466 73.628V73.6538C327.666 73.6538 334.327 67.37 334.327 58.4595C334.327 51.2486 327.692 45.1709 320.466 45.1709H320.492ZM237.558 58.7685C228.686 58.7685 225.728 66.0824 226.5 68.1426H247.33C247.844 68.1426 247.741 67.1125 247.638 66.6747C247.156 64.3797 245.88 62.3287 244.036 60.8825C242.192 59.4364 239.898 58.6878 237.558 58.7685Z" fill="black"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M41.7048 74.0916C47.6194 75.1218 66.572 70.6665 73.001 47.566C79.5843 23.7701 76.2412 28.5344 57.16 48.7248C46.8737 59.6957 38.7474 73.5508 41.7048 74.0916ZM58.3172 89.1314C78.9414 81.6115 78.6842 54.1587 75.3412 61.8074C71.9981 69.3273 69.7865 75.405 62.5861 79.6028C56.9286 82.8992 52.9169 83.3112 45.9479 83.1567C40.1618 83.028 34.89 78.1349 33.1928 85.5518C31.3927 93.7155 50.731 91.887 58.3172 89.1057V89.1314ZM40.9333 53.4892C56.7743 31.0325 80.3558 22.9975 77.6556 20.2162C74.4411 16.9198 60.2716 21.4008 60.2716 21.4008C38.2331 29.307 14.2659 44.115 12.6972 62.6058C12.1829 68.0139 13.7259 78.1864 20.4377 82.4099C25.0666 85.32 33.0642 64.563 40.9333 53.4892ZM25.478 33.6593C34.2214 27.0665 51.1168 21.6583 47.4908 21.8129C35.2501 22.1992 10.4085 32.4746 9.25129 48.3385C8.83984 53.3604 16.7089 40.2778 25.4523 33.6593H25.478ZM3.79952 93.3807C2.38515 91.2947 8.06836 90.0843 9.097 87.715C14.2402 77.6713 5.08532 81.7918 1.22793 58.7943C-6.22968 15.3488 66.2892 15.3488 75.9583 13.6234C84.856 12.0267 75.804 0 82.7988 0C85.1132 0 82.7988 6.20649 85.1132 7.13361C87.5819 8.18948 89.022 1.46793 91.465 3.57968C94.8338 6.48978 88.2505 9.14235 90.0507 10.9708C91.3364 12.2842 94.4223 9.81193 95.4767 11.5116C97.2768 14.293 92.3908 16.1472 88.0191 16.9198C72.0238 19.7269 106.303 91.3204 50.6539 101.21C35.9701 103.991 29.1297 90.7539 18.1747 97.2437C15.4745 98.8404 13.5458 104.918 11.8743 102.394C10.8457 100.849 13.5716 98.3253 11.8743 97.2694C10.7171 96.6256 9.04557 99.5357 7.88835 98.4798C6.9883 97.5527 8.27409 96.0848 7.37403 94.9001C6.60256 93.7155 4.80244 94.7714 3.90239 93.4322L3.82524 93.3549L3.79952 93.3807Z" fill="#006B3A"/>
+      </svg>
+      <span class="tagline">America's Finest News Source</span>
+    </div>
+    <div class="layer-indicator" id="layerIndicator">Layer 1 of 6</div>
+  </div>
+</header>
+
+<!-- Help button -->
+<button class="help-btn" id="helpBtn" title="Show instructions">?</button>
+
+<!-- Onboarding overlay -->
+<div class="onboarding" id="onboarding">
+  <!-- Desktop icon -->
+  <div class="desktop-instruction">
+    <svg class="onboarding-icon" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="wobble1">
+          <feTurbulence baseFrequency="0.02" numOctaves="3" seed="1" result="turb"/>
+          <feDisplacementMap in="SourceGraphic" in2="turb" scale="1.5"/>
+        </filter>
+      </defs>
+      <!-- Mouse cursor -->
+      <path d="M35 55 L35 90 L42 83 L50 95 L55 92 L47 80 L56 78 Z" stroke="white" stroke-width="2.5" fill="rgba(255,255,255,0.15)" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 2"/>
+      <!-- Curved drag arrow -->
+      <path d="M60 72 Q80 50 108 55" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="5 3"/>
+      <!-- Arrow head -->
+      <path d="M102 48 L108 55 L100 58" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 2"/>
+      <!-- Onion outline hint -->
+      <ellipse cx="42" cy="65" rx="18" ry="22" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="3 4"/>
+    </svg>
+    <div class="onboarding-text">Click, hold, and drag across to cut</div>
+    <div class="onboarding-hint">slash the knife through the onion from any side</div>
+  </div>
+  <!-- Mobile icon -->
+  <div class="mobile-instruction">
+    <svg class="onboarding-icon" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Fingertip -->
+      <circle cx="60" cy="85" r="14" stroke="white" stroke-width="2.5" fill="rgba(255,255,255,0.12)" stroke-dasharray="4 2"/>
+      <circle cx="60" cy="85" r="5" fill="rgba(255,255,255,0.3)"/>
+      <!-- Swipe arc -->
+      <path d="M60 70 Q55 45 65 28" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="5 3"/>
+      <!-- Arrow head -->
+      <path d="M58 34 L65 28 L68 37" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 2"/>
+      <!-- Motion lines -->
+      <line x1="75" y1="65" x2="82" y2="52" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4"/>
+      <line x1="80" y1="72" x2="90" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4"/>
+      <line x1="83" y1="80" x2="95" y2="70" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4"/>
+      <!-- Onion outline -->
+      <ellipse cx="60" cy="75" rx="20" ry="25" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" fill="none" stroke-dasharray="3 4"/>
+    </svg>
+    <div class="onboarding-text">Swipe your finger across to cut</div>
+    <div class="onboarding-hint">drag through the onion from any direction</div>
+  </div>
+</div>
+
+<!-- Stage -->
+<div class="stage" id="stage">
+  <div class="onion-container" id="onionContainer">
+    <svg class="onion-svg" viewBox="0 0 400 440" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- The logo onion outer silhouette, used as clipPath per layer -->
+        <!-- Original bounds: ~x[-6,106] y[0,105], center ~(50,52) -->
+        <!-- Layer gradients: realistic onion (brown papery outer → golden → cream → white inner) -->
+        <radialGradient id="grad1" cx="40%" cy="38%" r="60%">
+          <stop offset="0%" stop-color="#B8863A"/>
+          <stop offset="50%" stop-color="#8B5E2C"/>
+          <stop offset="100%" stop-color="#5C3A18"/>
+        </radialGradient>
+        <radialGradient id="grad2" cx="42%" cy="40%" r="58%">
+          <stop offset="0%" stop-color="#CDA050"/>
+          <stop offset="100%" stop-color="#A07830"/>
+        </radialGradient>
+        <radialGradient id="grad3" cx="42%" cy="40%" r="56%">
+          <stop offset="0%" stop-color="#E2C472"/>
+          <stop offset="100%" stop-color="#C8A44A"/>
+        </radialGradient>
+        <radialGradient id="grad4" cx="44%" cy="42%" r="54%">
+          <stop offset="0%" stop-color="#F0DDA0"/>
+          <stop offset="100%" stop-color="#E0C878"/>
+        </radialGradient>
+        <radialGradient id="grad5" cx="45%" cy="42%" r="52%">
+          <stop offset="0%" stop-color="#FAF2D8"/>
+          <stop offset="100%" stop-color="#F0E4B8"/>
+        </radialGradient>
+        <radialGradient id="grad6" cx="48%" cy="44%" r="50%">
+          <stop offset="0%" stop-color="#FEFCF4"/>
+          <stop offset="100%" stop-color="#F8F0DC"/>
+        </radialGradient>
+        <radialGradient id="coreGrad" cx="50%" cy="45%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="70%" stop-color="#FEFCF5"/>
+          <stop offset="100%" stop-color="#F5EED8"/>
+        </radialGradient>
+        <!-- Sheen -->
+        <radialGradient id="sheen" cx="35%" cy="30%" r="45%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+      </defs>
+
+      <!--
+        Concentric layers anchored from BOTTOM-CENTER of the bulb (50, 70)
+        so inner layers tuck inside, not poke above.
+        transform = translate(200 - 50*s, 250 - 70*s) scale(s)
+        Scales: 3.5, 3.2, 2.9, 2.6, 2.3, 2.0, core 1.7
+      -->
+
+      <!-- Core (hidden until all peeled) — s=1.7 → translate(115, 131) -->
+      <g id="onionCore" class="core-pulse" style="opacity: 0; transition: opacity 0.6s;">
+        <g transform="translate(115, 131) scale(1.7)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#coreGrad)" stroke="#E8E0C8" stroke-width="0.5"/>
+          <path d="M41.7 74.1C47.6 75.1 66.6 70.7 73 47.6C79.6 23.8 76.2 28.5 57.2 48.7C46.9 59.7 38.7 73.6 41.7 74.1Z" fill="#E8D8A8" opacity="0.25"/>
+        </g>
+      </g>
+
+      <!-- Layer 6: OPINION (s=2.0) → translate(100, 110) -->
+      <g class="onion-layer" id="layer6" data-layer="6">
+        <g transform="translate(100, 110) scale(2.0)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad6)" stroke="rgba(180,160,120,0.35)" stroke-width="0.6"/>
+        </g>
+      </g>
+
+      <!-- Layer 5: LIFESTYLE (s=2.3) → translate(85, 89) -->
+      <g class="onion-layer" id="layer5" data-layer="5">
+        <g transform="translate(85, 89) scale(2.3)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad5)" stroke="rgba(170,150,100,0.3)" stroke-width="0.5"/>
+        </g>
+      </g>
+
+      <!-- Layer 4: WORLD (s=2.6) → translate(70, 68) -->
+      <g class="onion-layer" id="layer4" data-layer="4">
+        <g transform="translate(70, 68) scale(2.6)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad4)" stroke="rgba(150,130,80,0.25)" stroke-width="0.45"/>
+        </g>
+      </g>
+
+      <!-- Layer 3: LOCAL (s=2.9) → translate(55, 47) -->
+      <g class="onion-layer" id="layer3" data-layer="3">
+        <g transform="translate(55, 47) scale(2.9)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad3)" stroke="rgba(140,110,50,0.2)" stroke-width="0.4"/>
+        </g>
+      </g>
+
+      <!-- Layer 2: POLITICS (s=3.2) → translate(40, 26) -->
+      <g class="onion-layer" id="layer2" data-layer="2">
+        <g transform="translate(40, 26) scale(3.2)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad2)" stroke="rgba(120,85,35,0.2)" stroke-width="0.35"/>
+        </g>
+      </g>
+
+      <!-- Layer 1: BREAKING (outermost, s=3.5) → translate(25, 5) -->
+      <g class="onion-layer" id="layer1" data-layer="1">
+        <g transform="translate(25, 5) scale(3.5)">
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#grad1)" stroke="#4A2810" stroke-width="0.25"/>
+          <path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="url(#sheen)"/>
+          <path d="M41.7 74.1C47.6 75.1 66.6 70.7 73 47.6C79.6 23.8 76.2 28.5 57.2 48.7C46.9 59.7 38.7 73.6 41.7 74.1Z" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.2"/>
+          <path d="M58.3 89.1C78.9 81.6 78.7 54.2 75.3 61.8C72 69.3 69.8 75.4 62.6 79.6C56.9 82.9 52.9 83.3 45.9 83.2C40.2 83 34.9 78.1 33.2 85.6C31.4 93.7 50.7 91.9 58.3 89.1Z" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.15"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Core message -->
+  <div class="core-message" id="coreMessage">
+    <p>An onion is a news website is an onion.<br>You peeled it. It let you.<br>The information was always the skin.<br>The center is just the center.<br>Crying is optional but recommended.</p>
+    <svg width="24" height="36" viewBox="0 0 24 36" class="teardrop">
+      <path d="M12 2 Q12 2 6 16 Q2 24 6 30 Q9 34 12 34 Q15 34 18 30 Q22 24 18 16 Q12 2 12 2Z" fill="#8B5E2C" opacity="0.5"/>
+    </svg>
+    <br><br>
+    <button class="regrow-btn" id="regrowBtn">Re-grow Onion</button>
+  </div>
+</div>
+
+<!-- Peel pile -->
+<div class="peel-pile" id="peelPile"></div>
+
+<!-- Cards sidebar -->
+<div class="cards-sidebar" id="cardsSidebar">
+  <h3>Peeled Articles</h3>
+  <div id="cardsContainer"></div>
+</div>
+
+<!-- Floating cards container -->
+<div class="floating-cards" id="floatingCards"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Article data
+  const LAYERS = [
+    {
+      id: 1, name: 'BREAKING', color: '#8B5E2C', thumbColor: '#C0392B',
+      articles: [
+        "Nation's Dog Suspected Of TSA PreCheck Fraud",
+        "Study: 94% Of Arguments Could Be Resolved By Checking Wikipedia First",
+        "Local Man's Crypto Portfolio Finally Worth What He Paid In Therapy"
+      ]
+    },
+    {
+      id: 2, name: 'POLITICS', color: '#A07830', thumbColor: '#1B2A4A',
+      articles: [
+        "Senator Accidentally Votes Yes On Bill He Was Supposed To Be Blocking",
+        "White House Intern Discovers President Has Been Using Wrong Oval Office Door For 3 Years",
+        "Congressional Committee Formed To Investigate Why Previous Committee Accomplished Nothing"
+      ]
+    },
+    {
+      id: 3, name: 'LOCAL', color: '#C8A44A', thumbColor: '#1E6B3A',
+      articles: [
+        "Area Man's 'Quick Trip To Target' Enters Hour 3",
+        "Neighbors Unsure If New Family Is Quirky Or Just Has Bad Taste",
+        "Local Restaurant's 'World Famous' Claim Questioned By Literally Everyone"
+      ]
+    },
+    {
+      id: 4, name: 'WORLD', color: '#E0C878', thumbColor: '#0E7C7B',
+      articles: [
+        "European Country You Forgot Existed Just Did Something",
+        "UN Report Finds Earth's Problems Could Be Solved If Everyone Just Chilled Out",
+        "Small Island Nation Releases Statement Asking Rest Of World To Please Stop"
+      ]
+    },
+    {
+      id: 5, name: 'LIFESTYLE', color: '#F0E4B8', thumbColor: '#E07656',
+      articles: [
+        "Woman Who 'Never Gets Sick' Currently On Day 4 Of Worst Cold Ever",
+        "Man Discovers Meal Prep Is Just Cooking With Extra Tupperware",
+        "Report: You Will Never Use That Gym Membership And You Know It"
+      ]
+    },
+    {
+      id: 6, name: 'OPINION', color: '#F8F0DC', thumbColor: '#4A2366',
+      articles: [
+        "I'm Not A Regular Mom, I'm A Mom Who Makes That Extremely Clear To Everyone",
+        "It's Time We Had An Honest Conversation About Something I Refuse To Be Wrong About",
+        "We Need To Stop Normalizing Things I Personally Don't Like"
+      ]
+    }
+  ];
+
+  // Random thumbnail images from michaelseh.com/images/1-999.jpg
+  // Pre-generate a unique random number for each article on load
+  const thumbImages = {};
+  const usedNums = new Set();
+  function randThumbNum() {
+    let n;
+    do { n = Math.floor(Math.random() * 999) + 1; } while (usedNums.has(n));
+    usedNums.add(n);
+    return n;
+  }
+  LAYERS.forEach(layer => {
+    thumbImages[layer.id] = layer.articles.map(() => randThumbNum());
+  });
+  function getThumbImg(layerId, articleIdx) {
+    const n = thumbImages[layerId][articleIdx];
+    return `<img src="https://michaelseh.com/images/${n}.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+  }
+
+  let currentLayer = 1;
+  let peelCount = 0;
+  let isDragging = false;
+  let dragStart = { x: 0, y: 0 };
+  const totalLayers = 6;
+
+  // DOM refs
+  const stage = document.getElementById('stage');
+  const onionContainer = document.getElementById('onionContainer');
+  const layerIndicator = document.getElementById('layerIndicator');
+  const peelPile = document.getElementById('peelPile');
+  const cardsSidebar = document.getElementById('cardsSidebar');
+  const cardsContainer = document.getElementById('cardsContainer');
+  const floatingCards = document.getElementById('floatingCards');
+  const coreMessage = document.getElementById('coreMessage');
+  const onionCore = document.getElementById('onionCore');
+  const onboarding = document.getElementById('onboarding');
+  const helpBtn = document.getElementById('helpBtn');
+  const regrowBtn = document.getElementById('regrowBtn');
+
+  // ── Fruit-Ninja-style peel trail ──
+  const trailCanvas = document.getElementById('trailCanvas');
+  const tctx = trailCanvas.getContext('2d');
+  let trailPoints = [];
+  let trailActive = false;
+  let trailRAF = null;
+
+  // Onion skin knife-slash palette
+  const TRAIL_COLORS = [
+    { r: 92, g: 58, b: 24 },    // dark papery brown
+    { r: 139, g: 94, b: 44 },   // copper skin
+    { r: 200, g: 160, b: 72 },  // golden amber
+    { r: 232, g: 204, b: 110 }, // pale gold
+    { r: 248, g: 240, b: 220 }, // cream peel
+  ];
+
+  function resizeTrailCanvas() {
+    trailCanvas.width = window.innerWidth * devicePixelRatio;
+    trailCanvas.height = window.innerHeight * devicePixelRatio;
+    tctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  resizeTrailCanvas();
+  window.addEventListener('resize', resizeTrailCanvas);
+
+  function addTrailPoint(x, y) {
+    trailPoints.push({ x, y, t: performance.now(), width: 1 });
+    if (!trailRAF) trailRAF = requestAnimationFrame(drawTrail);
+  }
+
+  function drawTrail() {
+    const now = performance.now();
+    const LIFETIME = 300;
+
+    trailPoints = trailPoints.filter(p => now - p.t < LIFETIME);
+
+    tctx.clearRect(0, 0, trailCanvas.width / devicePixelRatio, trailCanvas.height / devicePixelRatio);
+
+    if (trailPoints.length < 2) {
+      if (trailPoints.length === 0) { trailRAF = null; return; }
+      trailRAF = requestAnimationFrame(drawTrail);
+      return;
+    }
+
+    const len = trailPoints.length;
+
+    // Pass 1: outer glow — wide, very soft, editorial amber haze
+    for (let i = 1; i < len; i++) {
+      const p0 = trailPoints[i - 1], p1 = trailPoints[i];
+      const age = 1 - (now - p1.t) / LIFETIME;
+      if (age <= 0) continue;
+      const progress = i / len;
+      const taper = Math.sin(progress * Math.PI);
+      const w = taper * 36;
+      const ci = Math.min(Math.floor(progress * TRAIL_COLORS.length), TRAIL_COLORS.length - 1);
+      const c = TRAIL_COLORS[ci];
+      tctx.beginPath();
+      tctx.moveTo(p0.x, p0.y);
+      tctx.lineTo(p1.x, p1.y);
+      tctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${age * 0.08})`;
+      tctx.lineWidth = w;
+      tctx.lineCap = 'round';
+      tctx.stroke();
+    }
+
+    // Pass 2: knife blade — crisp, tapered, editorial gold
+    for (let i = 1; i < len; i++) {
+      const p0 = trailPoints[i - 1], p1 = trailPoints[i];
+      const age = 1 - (now - p1.t) / LIFETIME;
+      if (age <= 0) continue;
+      const progress = i / len;
+      // Sharp taper: thin at start, peaks fast, thin at end
+      const taper = Math.pow(Math.sin(progress * Math.PI), 0.6);
+      const w = 1.5 + taper * 8;
+      const ci = Math.min(Math.floor(progress * TRAIL_COLORS.length), TRAIL_COLORS.length - 1);
+      const c = TRAIL_COLORS[ci];
+      tctx.beginPath();
+      tctx.moveTo(p0.x, p0.y);
+      tctx.lineTo(p1.x, p1.y);
+      tctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${age * 0.85})`;
+      tctx.lineWidth = w;
+      tctx.lineCap = 'round';
+      tctx.stroke();
+    }
+
+    // Pass 3: bright knife edge — ultra-thin bright core like a steel blade reflection
+    for (let i = 1; i < len; i++) {
+      const p0 = trailPoints[i - 1], p1 = trailPoints[i];
+      const age = 1 - (now - p1.t) / LIFETIME;
+      if (age <= 0) continue;
+      const progress = i / len;
+      const taper = Math.pow(Math.sin(progress * Math.PI), 0.5);
+      const w = 0.5 + taper * 2.5;
+      tctx.beginPath();
+      tctx.moveTo(p0.x, p0.y);
+      tctx.lineTo(p1.x, p1.y);
+      tctx.strokeStyle = `rgba(255, 252, 240, ${age * 0.7})`;
+      tctx.lineWidth = w;
+      tctx.lineCap = 'round';
+      tctx.stroke();
+    }
+
+    // Pass 4: occasional shimmer particles along the trail
+    for (let i = 2; i < len; i += 3) {
+      const p = trailPoints[i];
+      const age = 1 - (now - p.t) / LIFETIME;
+      if (age <= 0.2) continue;
+      const shimmerSize = 1 + Math.random() * 2;
+      const ox = (Math.random() - 0.5) * 12;
+      const oy = (Math.random() - 0.5) * 12;
+      tctx.beginPath();
+      tctx.arc(p.x + ox, p.y + oy, shimmerSize, 0, Math.PI * 2);
+      tctx.fillStyle = `rgba(232, 210, 130, ${age * 0.4 * Math.random()})`;
+      tctx.fill();
+    }
+
+    trailRAF = requestAnimationFrame(drawTrail);
+  }
+
+  // Global pointer tracking for trail (works for both mouse + touch)
+  document.addEventListener('pointerdown', function(e) {
+    trailActive = true;
+    trailPoints = [];
+    addTrailPoint(e.clientX, e.clientY);
+  });
+  document.addEventListener('pointermove', function(e) {
+    if (!trailActive) return;
+    addTrailPoint(e.clientX, e.clientY);
+  });
+  document.addEventListener('pointerup', function() { trailActive = false; });
+  document.addEventListener('pointercancel', function() { trailActive = false; });
+
+  // Onboarding
+  let onboardingDismissed = false;
+  function dismissOnboarding() {
+    if (onboardingDismissed) return;
+    onboardingDismissed = true;
+    onboarding.classList.add('hidden');
+  }
+  // Auto dismiss after 4s
+  setTimeout(dismissOnboarding, 4000);
+  // Dismiss on any interaction
+  document.addEventListener('pointerdown', dismissOnboarding, { once: true });
+  document.addEventListener('keydown', dismissOnboarding, { once: true });
+  // Help button re-shows
+  helpBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    onboardingDismissed = false;
+    onboarding.classList.remove('hidden');
+    setTimeout(dismissOnboarding, 4000);
+    document.addEventListener('pointerdown', dismissOnboarding, { once: true });
+  });
+
+  // Space key to peel
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' && currentLayer <= totalLayers) {
+      e.preventDefault();
+      peelLayer(currentLayer);
+    }
+  });
+
+  // ── Global swipe-to-peel (Fruit Ninja style) ──
+  // Drag can start ANYWHERE — if the path crosses the onion, it peels.
+  let swipeDragActive = false;
+  let swipeStart = { x: 0, y: 0 };
+  let swipeCrossedOnion = false;
+  let swipePeeled = false;
+
+  function getOnionBounds() {
+    const rect = onionContainer.getBoundingClientRect();
+    // Inset slightly so you have to actually cross the onion body, not just clip a corner
+    const inset = rect.width * 0.1;
+    return {
+      left: rect.left + inset,
+      right: rect.right - inset,
+      top: rect.top + inset,
+      bottom: rect.bottom - inset,
+      cx: rect.left + rect.width / 2,
+      cy: rect.top + rect.height / 2
+    };
+  }
+
+  function pointInOnion(x, y) {
+    const b = getOnionBounds();
+    // Use ellipse hit-test for the onion shape (wider at bottom)
+    const rx = (b.right - b.left) / 2;
+    const ry = (b.bottom - b.top) / 2;
+    const dx = (x - b.cx) / rx;
+    const dy = (y - b.cy) / ry;
+    return (dx * dx + dy * dy) <= 1;
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    if (currentLayer > totalLayers) return;
+    swipeDragActive = true;
+    swipePeeled = false;
+    swipeCrossedOnion = false;
+    swipeStart = { x: e.clientX, y: e.clientY };
+
+    // If starting ON the onion, mark it immediately
+    if (pointInOnion(e.clientX, e.clientY)) {
+      swipeCrossedOnion = true;
+    }
+
+    // Preview: show the current layer reacting if pointer is on onion
+    if (swipeCrossedOnion) {
+      const layerEl = document.getElementById('layer' + currentLayer);
+      if (layerEl) layerEl.style.transition = 'transform 0.1s, opacity 0.1s';
+    }
+  });
+
+  document.addEventListener('pointermove', function(e) {
+    if (!swipeDragActive || swipePeeled || currentLayer > totalLayers) return;
+
+    const x = e.clientX, y = e.clientY;
+    const dx = x - swipeStart.x;
+    const dy = y - swipeStart.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // Check if pointer has entered the onion region
+    if (!swipeCrossedOnion && pointInOnion(x, y)) {
+      swipeCrossedOnion = true;
+    }
+
+    if (!swipeCrossedOnion) return;
+
+    // Show partial peel preview on current layer
+    const layerEl = document.getElementById('layer' + currentLayer);
+    if (!layerEl || layerEl.classList.contains('peeling')) return;
+
+    const peelProgress = Math.min(dist / 120, 1);
+    const rotY = dx > 0 ? peelProgress * -20 : dx < 0 ? peelProgress * 20 : 0;
+    const rotX = dy < 0 ? peelProgress * 18 : dy > 0 ? peelProgress * -18 : 0;
+    const skew = dx > 0 ? peelProgress * 3 : peelProgress * -3;
+    layerEl.style.transform = `perspective(600px) rotateY(${rotY}deg) rotateX(${rotX}deg) skewY(${skew}deg) scale(${1 + peelProgress * 0.02})`;
+    layerEl.style.opacity = 1 - peelProgress * 0.15;
+    layerEl.style.transformOrigin = dx > 0 ? '0% 60%' : '100% 60%';
+
+    // If dragged far enough across/through the onion, peel
+    if (dist > 80) {
+      swipePeeled = true;
+      swipeDragActive = false;
+      const dir = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy < 0 ? 'up' : 'down');
+      peelLayer(currentLayer, dir);
+    }
+  });
+
+  document.addEventListener('pointerup', function(e) {
+    if (!swipeDragActive) return;
+    swipeDragActive = false;
+
+    if (swipePeeled || currentLayer > totalLayers) return;
+
+    const dx = e.clientX - swipeStart.x;
+    const dy = e.clientY - swipeStart.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // Snap back if didn't peel (swipe required, no tap)
+    const layerEl = document.getElementById('layer' + currentLayer);
+    if (layerEl) {
+      layerEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      layerEl.style.transform = '';
+      layerEl.style.opacity = '';
+      setTimeout(() => { if (layerEl) layerEl.style.transition = ''; }, 300);
+    }
+  });
+
+  document.addEventListener('pointercancel', function() {
+    swipeDragActive = false;
+    const layerEl = document.getElementById('layer' + currentLayer);
+    if (layerEl) { layerEl.style.transform = ''; layerEl.style.opacity = ''; }
+  });
+
+  // Click directly on layers still works as fallback
+  function setupLayerEvents() {
+    for (let i = 1; i <= totalLayers; i++) {
+      const layerEl = document.getElementById('layer' + i);
+      if (!layerEl) continue;
+      layerEl.style.cursor = "url('knife.cur'), crosshair";
+    }
+  }
+
+  // Skin fragment colors per layer (outer papery → inner pale)
+  const FRAG_COLORS = [
+    ['#7A4E22', '#9B6830', '#B8863A', '#A07028'],  // layer 1 — dark papery
+    ['#A07830', '#C49840', '#B88828', '#CDA050'],   // layer 2 — golden
+    ['#C8A44A', '#D4B860', '#E2C472', '#CCA848'],   // layer 3 — warm yellow
+    ['#E0C878', '#EAD890', '#D8BC68', '#F0DDA0'],   // layer 4 — pale yellow
+    ['#F0E4B8', '#F5ECC8', '#E8D8A0', '#FAF2D8'],   // layer 5 — cream
+    ['#F8F0DC', '#FBF5E8', '#F0E8CC', '#FEFCF4'],   // layer 6 — white
+  ];
+
+  function spawnFragments(layerNum, dir) {
+    const rect = onionContainer.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const colors = FRAG_COLORS[layerNum - 1];
+    const count = 8 + Math.floor(Math.random() * 6); // 8-13 fragments
+
+    for (let i = 0; i < count; i++) {
+      const frag = document.createElement('div');
+      frag.className = 'skin-fragment';
+
+      // Randomize size (small torn shards)
+      const w = 6 + Math.random() * 18;
+      const h = 4 + Math.random() * 12;
+      frag.style.width = w + 'px';
+      frag.style.height = h + 'px';
+      frag.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+      // Start position — near the peel edge
+      let sx, sy;
+      if (dir === 'right')     { sx = cx + rect.width * 0.2 * Math.random(); sy = cy + (Math.random() - 0.5) * rect.height * 0.6; }
+      else if (dir === 'left') { sx = cx - rect.width * 0.2 * Math.random(); sy = cy + (Math.random() - 0.5) * rect.height * 0.6; }
+      else if (dir === 'up')   { sx = cx + (Math.random() - 0.5) * rect.width * 0.6; sy = cy - rect.height * 0.2 * Math.random(); }
+      else                     { sx = cx + (Math.random() - 0.5) * rect.width * 0.6; sy = cy + rect.height * 0.2 * Math.random(); }
+
+      frag.style.left = sx + 'px';
+      frag.style.top = sy + 'px';
+
+      // Flight direction — scatter outward from peel direction
+      const spread = 120 + Math.random() * 180;
+      const angle = dir === 'right' ? (-60 + Math.random() * 120) : dir === 'left' ? (120 + Math.random() * 120) : dir === 'up' ? (-150 + Math.random() * 120) : (30 + Math.random() * 120);
+      const rad = angle * Math.PI / 180;
+      const fx = Math.cos(rad) * spread;
+      const fy = Math.sin(rad) * spread - 40; // slight upward bias (gravity-defying peel)
+      const frot = (-180 + Math.random() * 360);
+      const dur = 0.5 + Math.random() * 0.6;
+
+      frag.style.setProperty('--fx', fx + 'px');
+      frag.style.setProperty('--fy', fy + 'px');
+      frag.style.setProperty('--frot', frot + 'deg');
+      frag.style.setProperty('--dur', dur + 's');
+
+      document.body.appendChild(frag);
+      setTimeout(() => frag.remove(), dur * 1000 + 50);
+    }
+  }
+
+  function peelLayer(layerNum, direction) {
+    if (layerNum !== currentLayer || layerNum > totalLayers) return;
+
+    const layerEl = document.getElementById('layer' + layerNum);
+    if (!layerEl || layerEl.classList.contains('peeling')) return;
+
+    layerEl.classList.add('peeling');
+    dismissOnboarding();
+
+    // Screen shake
+    document.body.classList.add('shaking');
+    setTimeout(() => document.body.classList.remove('shaking'), 200);
+
+    // Blur pulse
+    stage.classList.add('blurring');
+    setTimeout(() => stage.classList.remove('blurring'), 400);
+
+    // Determine peel direction
+    const dir = direction || (Math.random() > 0.5 ? 'right' : 'left');
+    const animName = dir === 'right' ? 'peelRight' : dir === 'left' ? 'peelLeft' : dir === 'up' ? 'peelUp' : 'peelDown';
+
+    // Spawn torn skin fragments
+    spawnFragments(layerNum, dir);
+    // Second burst slightly delayed for staggered effect
+    setTimeout(() => spawnFragments(layerNum, dir), 200);
+
+    // Multi-step peel animation — curls from edge, lifts, crumples away
+    layerEl.style.transition = 'none';
+    layerEl.style.animation = `${animName} 1s cubic-bezier(0.25, 0.1, 0.25, 1) forwards`;
+
+    // Show articles
+    showArticles(layerNum);
+
+    // Add to peel pile after animation completes
+    setTimeout(() => {
+      layerEl.classList.add('peeled');
+      layerEl.style.display = 'none';
+      addToPeelPile(LAYERS[layerNum - 1].color);
+    }, 1000);
+
+    currentLayer++;
+    updateLayerIndicator();
+
+    // Check if all peeled
+    if (currentLayer > totalLayers) {
+      setTimeout(() => {
+        onionCore.style.opacity = '1';
+        coreMessage.classList.add('visible');
+      }, 900);
+    }
+  }
+
+  function addToPeelPile(color) {
+    peelCount++;
+    const skin = document.createElement('div');
+    skin.className = 'peel-skin';
+    const rot = -40 + Math.random() * 80;
+    const sc = 0.6 + Math.random() * 0.5;
+    const x = Math.random() * 100;
+    const y = Math.random() * 80;
+    skin.style.setProperty('--rot', rot + 'deg');
+    skin.style.setProperty('--sc', sc);
+    skin.style.left = x + 'px';
+    skin.style.top = y + 'px';
+    // Use the onion silhouette as the skin shape
+    skin.innerHTML = `<svg viewBox="-8 -2 115 110" width="70" height="45" style="filter:drop-shadow(1px 1px 2px rgba(0,0,0,0.15))"><path d="M3.8 93.4C2.4 91.3 8.1 90.1 9.1 87.7C14.2 77.7 5.1 81.8 1.2 58.8C-6.2 15.3 66.3 15.3 76 13.6C84.9 12 75.8 0 82.8 0C85.1 0 82.8 6.2 85.1 7.1C87.6 8.2 89 1.5 91.5 3.6C94.8 6.5 88.3 9.1 90.1 11C91.3 12.3 94.4 9.8 95.5 11.5C97.3 14.3 92.4 16.1 88 16.9C72 19.7 106.3 91.3 50.7 101.2C36 104 29.1 90.8 18.2 97.2C15.5 98.8 13.5 104.9 11.9 102.4C10.8 100.8 13.6 98.3 11.9 97.3C10.7 96.6 9 99.5 7.9 98.5C7 97.6 8.3 96.1 7.4 94.9C6.6 93.7 4.8 94.8 3.9 93.4Z" fill="${color}" opacity="0.7"/></svg>`;
+    peelPile.appendChild(skin);
+  }
+
+  function showArticles(layerNum) {
+    const layerData = LAYERS[layerNum - 1];
+
+    // Create floating cards briefly
+    floatingCards.innerHTML = '';
+    layerData.articles.forEach((headline, i) => {
+      const card = document.createElement('div');
+      card.className = 'floating-card';
+      card.style.animationDelay = (i * 0.1) + 's';
+      const thumbHtml = getThumbImg(layerData.id, i);
+      card.innerHTML = `
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <div style="flex-shrink:0;width:50px;height:38px;border-radius:3px;overflow:hidden;background:#ddd;">${thumbHtml}</div>
+          <div>
+            <span style="display:inline-block;font-family:Arial,sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff;background:${layerData.thumbColor};padding:1px 5px;border-radius:2px;margin-bottom:3px;">${layerData.name}</span>
+            <div style="font-family:'Arial Black',Arial,sans-serif;font-size:11px;font-weight:900;line-height:1.2;color:#111;">${headline}</div>
+          </div>
+        </div>
+      `;
+      floatingCards.appendChild(card);
+    });
+    floatingCards.classList.add('visible');
+
+    // Move to sidebar after delay
+    setTimeout(() => {
+      floatingCards.classList.remove('visible');
+
+      // Add category header to sidebar
+      const catHeader = document.createElement('div');
+      catHeader.style.cssText = 'font-family:"Arial Black",Arial,sans-serif;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:' + layerData.thumbColor + ';margin-top:14px;margin-bottom:6px;padding-top:10px;border-top:2px solid ' + layerData.thumbColor + ';';
+      catHeader.textContent = layerData.name;
+      cardsContainer.appendChild(catHeader);
+
+      layerData.articles.forEach((headline, i) => {
+        const card = document.createElement('div');
+        card.className = 'article-card';
+        card.style.animationDelay = (i * 0.1) + 's';
+        const thumbHtml = getThumbImg(layerData.id, i);
+        card.innerHTML = `
+          <div class="card-thumb">${thumbHtml}</div>
+          <div class="card-body">
+            <span class="card-category" style="background:${layerData.thumbColor}">${layerData.name}</span>
+            <div class="card-headline">${headline}</div>
+          </div>
+        `;
+        cardsContainer.appendChild(card);
+      });
+
+      cardsSidebar.classList.add('open');
+    }, 2000);
+  }
+
+  function updateLayerIndicator() {
+    if (currentLayer > totalLayers) {
+      layerIndicator.textContent = 'All layers peeled';
+    } else {
+      layerIndicator.textContent = `Layer ${currentLayer} of ${totalLayers}`;
+    }
+  }
+
+  // Re-grow
+  regrowBtn.addEventListener('click', function() {
+    coreMessage.classList.remove('visible');
+    onionCore.style.opacity = '0';
+    cardsSidebar.classList.remove('open');
+    cardsContainer.innerHTML = '';
+    peelPile.innerHTML = '';
+    floatingCards.innerHTML = '';
+    peelCount = 0;
+    currentLayer = 1;
+    updateLayerIndicator();
+
+    // Re-show layers — clear all inline styles first, then fade in
+    for (let i = totalLayers; i >= 1; i--) {
+      const layerEl = document.getElementById('layer' + i);
+      if (!layerEl) continue;
+      layerEl.classList.remove('peeling', 'peeled');
+      layerEl.removeAttribute('style');
+      layerEl.style.display = '';
+      layerEl.style.opacity = '0';
+
+      const delay = (totalLayers - i) * 150;
+      setTimeout((el) => {
+        el.style.transition = 'opacity 0.4s ease';
+        el.style.opacity = '1';
+        setTimeout(() => {
+          el.removeAttribute('style');
+        }, 500);
+      }, delay, layerEl);
+    }
+  });
+
+  // Init
+  setupLayerEvents();
+  updateLayerIndicator();
+
+})();
+</script>
+</body>
+</html>
