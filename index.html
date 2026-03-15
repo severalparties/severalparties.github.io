@@ -276,14 +276,17 @@ body.shaking {
   z-index: 20;
   user-select: none;
   -webkit-user-select: none;
+  width: 100%;
+  display: flex; flex-direction: column; align-items: center;
 }
 .core-message.visible {
   opacity: 1; pointer-events: auto;
 }
 .core-message p {
-  font-style: italic; font-size: 16px;
-  color: #555; max-width: 280px;
-  line-height: 1.5; margin-bottom: 16px;
+  font-style: italic; font-size: 17px;
+  color: #555; max-width: 260px;
+  line-height: 1.6; margin: 0 auto 16px;
+  text-align: center;
 }
 .core-message .teardrop {
   display: inline-block;
@@ -395,7 +398,7 @@ body.shaking {
 @media (max-width: 767px) {
   .stage {
     padding-top: 56px;
-    padding-bottom: 0;
+    padding-bottom: 12vh;
     align-items: center;
     justify-content: center;
   }
@@ -648,7 +651,7 @@ body.shaking {
 
   <!-- Core message -->
   <div class="core-message" id="coreMessage">
-    <p>An onion is a news website is an onion.<br>You peeled it. It let you.<br>The information was always the skin.<br>The center is just the center.<br>Crying is optional but recommended.</p>
+    <p>You peeled it. It let you.<br><br>The information was the skin.<br>The center is just the center.<br><br>Only tears now.</p>
     <svg width="24" height="36" viewBox="0 0 24 36" class="teardrop">
       <path d="M12 2 Q12 2 6 16 Q2 24 6 30 Q9 34 12 34 Q15 34 18 30 Q22 24 18 16 Q12 2 12 2Z" fill="#8B5E2C" opacity="0.5"/>
     </svg>
