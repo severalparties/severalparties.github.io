@@ -1171,12 +1171,14 @@ body.shaking {
     setTimeout(() => {
       floatingCards.classList.remove('visible');
 
-      // Add category header to sidebar
+      // Prepend new articles at top so most recent peel is first
       const catHeader = document.createElement('div');
       catHeader.style.cssText = 'font-family:"Arial Black",Arial,sans-serif;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:' + layerData.thumbColor + ';margin-top:14px;margin-bottom:6px;padding-top:10px;border-top:2px solid ' + layerData.thumbColor + ';';
       catHeader.textContent = layerData.name;
-      cardsContainer.appendChild(catHeader);
 
+      // Build cards into a fragment, then prepend header + cards before existing content
+      const frag = document.createDocumentFragment();
+      frag.appendChild(catHeader);
       layerData.articles.forEach((headline, i) => {
         const card = document.createElement('div');
         card.className = 'article-card';
@@ -1189,8 +1191,9 @@ body.shaking {
             <div class="card-headline">${headline}</div>
           </div>
         `;
-        cardsContainer.appendChild(card);
+        frag.appendChild(card);
       });
+      cardsContainer.prepend(frag);
 
       cardsSidebar.classList.add('open');
     }, 2000);
