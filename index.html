@@ -202,22 +202,25 @@ body.shaking {
 
 /* Article cards container */
 .cards-sidebar {
-  position: fixed; right: 0; top: 70px; bottom: 0;
+  position: fixed; right: 0; top: 90px; bottom: 0;
   width: 340px; background: #fff;
-  border-left: 1px solid #ddd;
+  border-left: none;
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.4s ease;
   z-index: 50;
-  padding: 16px;
+  padding: 20px 20px 20px 24px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .cards-sidebar.open { transform: translateX(0); }
 .cards-sidebar h3 {
   font-family: 'Arial Narrow', Arial, sans-serif;
   font-size: 13px; text-transform: uppercase;
   letter-spacing: 2px; color: #999;
-  margin-bottom: 12px; padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 16px; padding-bottom: 0;
+  border-bottom: none;
+  display: flex; align-items: center; justify-content: space-between;
 }
 
 /* Article card */
@@ -355,15 +358,14 @@ body.shaking {
 
 /* Help button */
 .help-btn {
-  position: fixed; top: 90px; right: 16px;
-  width: 32px; height: 32px;
+  width: 28px; height: 28px;
   border-radius: 50%; border: 2px solid var(--brand-green);
   background: #fff; color: var(--brand-green);
-  font-family: Georgia, serif; font-size: 16px; font-weight: 700;
+  font-family: Georgia, serif; font-size: 14px; font-weight: 700;
   cursor: pointer; z-index: 150;
   display: flex; align-items: center; justify-content: center;
   transition: background 0.2s, color 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-shrink: 0;
 }
 .help-btn:hover { background: var(--brand-green); color: #fff; }
 
@@ -434,7 +436,7 @@ body.shaking {
   }
   .core-message p { font-size: 14px; max-width: 240px; }
   .regrow-btn { font-size: 12px; padding: 8px 18px; }
-  .help-btn { top: 82px; right: 10px; width: 28px; height: 28px; font-size: 14px; }
+  .help-btn { width: 24px; height: 24px; font-size: 12px; }
   .onboarding-icon { width: 100px; height: 100px; }
   .onboarding-text { font-size: 16px; }
   .onboarding-hint { font-size: 12px; }
@@ -494,8 +496,7 @@ body.shaking {
   </div>
 </header>
 
-<!-- Help button -->
-<button class="help-btn" id="helpBtn" title="Show instructions">?</button>
+<!-- Help button moved inside sidebar h3 -->
 
 <!-- Onboarding overlay -->
 <div class="onboarding" id="onboarding">
@@ -665,7 +666,7 @@ body.shaking {
 
 <!-- Cards sidebar -->
 <div class="cards-sidebar" id="cardsSidebar">
-  <h3>Peeled Articles</h3>
+  <h3><span>Peeled Articles</span><button class="help-btn" id="helpBtn" title="Show instructions">?</button></h3>
   <div id="cardsContainer"></div>
 </div>
 
